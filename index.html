@@ -1,0 +1,606 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Catallaxy Services | The Basics of Speech and Natural Language Processing</title>
+
+		<link rel="stylesheet" href="../reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="../reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="../reveal.js/dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="../WebsiteAssets/mods.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h2>The Basics of Speech and Natural Language Processing</h2>
+					
+					<a href="https://www.catallaxyservices.com">Kevin Feasel</a> (<a href="https://twitter.com/feaselkl">@feaselkl</a>)<br />
+					<a href="https://csmore.info/on/basicsofnlp">https://csmore.info/on/basicsofnlp</a>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Who Am I?  What Am I Doing Here?</h3>
+					<div class="container">
+						<div class="col">
+							<table class="whoami">
+								<tr>
+									<td><a href="https://csmore.info"><img src="../WebsiteAssets/Logo.png" height="100" /></a></td>
+									<td nowrap><a href="https://csmore.info">Catallaxy Services</a></td>
+								</tr>
+								<tr>
+									<td><a href="https://curatedsql.com"><img src="../WebsiteAssets/CuratedSQLLogo.png" height="100" /></a></td>
+									<td nowrap><a href="https://curatedsql.com">Curated SQL</a></td>
+								</tr>
+								<tr>
+									<td><a href="https://www.amazon.com/Finding-Ghosts-Your-Data-Techniques/dp/1484288696"><img src="../WebsiteAssets/Finding-Ghosts.jpg" height="120" /></a></td>
+									<td nowrap><a href="https://www.amazon.com/Finding-Ghosts-Your-Data-Techniques/dp/1484288696">Finding Ghosts in Your Data</a></td>
+								</tr>
+							</table>
+						</div>
+						<div class="col">
+							<a href="http://www.twitter.com/feaselkl"><img src="../WebsiteAssets/HeadShot.jpg" height="358" width="315" /></a>
+							<br />
+							<a href="http://www.twitter.com/feaselkl">@feaselkl</a>
+						</div>					
+					</div>
+				</section>
+				
+				<section data-background-image="presentation/assets/background/motivation.jpg" data-background-opacity="0.2">
+					<h3>Motivation</h3>
+					
+					<p>My goals in this talk:</p>
+					
+					<ul>
+						<li>Provide an overview of the field of natural language processing (NLP)</li>
+						<li>Introduce the SpaCy and NLTK Python libraries</li>
+						<li>Discuss linguistics vis-a-vis NLP</li>
+						<li>Briefly describe the move to vectors as tokens</li>
+					</ul>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>What We'll Do</h3>
+
+					<img src="presentation/assets/image/Demo01.png" height="550" />
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>What We'll Do</h3>
+					
+					<img src="presentation/assets/image/Demo02.png" height="550" />
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>What We'll Do</h3>
+
+					<img src="presentation/assets/image/Demo03.png" height="550" />
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>What We'll Do</h3>
+					
+					<img src="presentation/assets/image/Demo04.png" height="550" />
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>What We'll Do</h3>
+					
+					<img src="presentation/assets/image/Demo05.png" height="550" />
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+					
+					<ol>
+						<li class="active">Words are Hard</li>
+						<li>What is Natural Language Processing?</li>
+						<li>An Introduction to SpaCy</li>
+						<li>NLTK: A Historical Perspective</li>
+						<li>Linguistics and NLP</li>
+						<li>From Tags to Vectors</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/books-45degree.jpg" data-background-opacity="0.2">
+					<h3>Why Should We Care?</h3>
+					
+					<p>We deal with data every day, including natural language text.</p>
+
+					<p>There are a variety of tasks relevant to us, like extracting structured information from unstructured text (e.g., topic extraction from whitepapers), automation, and document search.</p>
+
+					<p>In order to perform these tasks, we--or the computers we are running--need to be able to parse and extract information from this text.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/dogs.jpg" data-background-opacity="0.2">
+					<h3>Sentence Diagramming Like We're Eight Again</h3>
+
+					<p>You can use a technique known as <strong>sentence diagramming</strong> to break sentences down into their key components. This is an example of diagramming using the Reed-Kellogg system.</p>
+
+					<p>Start with the following sentence:</p>
+					
+					<p><strong>The dog brought me his old ball in the morning.</strong></p>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Sentence Diagramming Like We're Eight Again</h3>
+
+					<p><strong>The dog brought me his old ball in the morning.</strong></p>
+
+					<p>Step 1: Diagram the subject noun and main predicate verb</p>
+
+					<img src="presentation/assets/image/Diagram01.jpg" height="400" />
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Sentence Diagramming Like We're Eight Again</h3>
+
+					<p><strong>The dog brought me his old ball in the morning.</strong></p>
+
+					<p>Step 2: Add the direct object</p>
+
+					<img src="presentation/assets/image/Diagram02.jpg" height="400" />
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Sentence Diagramming Like We're Eight Again</h3>
+
+					<p><strong>The dog brought me his old ball in the morning.</strong></p>
+
+					<p>Step 3: Add indirect object(s)</p>
+
+					<img src="presentation/assets/image/Diagram03.jpg" height="400" />
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Sentence Diagramming Like We're Eight Again</h3>
+
+					<p><strong>The dog brought me his old ball in the morning.</strong></p>
+
+					<p>Step 4: Add prepositional phrases</p>
+
+					<img src="presentation/assets/image/Diagram04.jpg" height="400" />
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Sentence Diagramming Like We're Eight Again</h3>
+
+					<p><strong>The dog brought me his old ball in the morning.</strong></p>
+
+					<p>Step 5: Add modifiers and articles</p>
+
+					<img src="presentation/assets/image/Diagram05.jpg" height="400" />
+				</section>
+
+				<section data-background-image="presentation/assets/background/typewriter.jpg" data-background-opacity="0.2">
+					<h3>Key Terms in Language</h3>
+
+					<p>Here are some of the key terms you will often see in natural language processing discussions or the literature.</p>
+
+					<ul>
+						<li><strong>Semantics</strong> - The study of meaning in language</li>
+						<li class="fragment"><strong>Syntax</strong> - The rules governing valid word combinations</li>
+						<li class="fragment"><strong>Morpheme</strong> - The base unit of a word. Ex: "run"</li>
+						<li class="fragment"><strong>Morphology</strong> - The study of word formation, starting with morphemes and including prefixes, suffixes, gerunds, etc. Ex: "runs," "running," "runner"</li>
+						<li class="fragment"><strong>Pragmatics</strong> - How context influences meaning, including speaker intent, social cues, and shared knowledge. Ex: "Ich bin ein Esel, Friedrich der Zweite"</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/background/sketch.jpg" data-background-opacity="0.2">
+					<h3>(More) Key Terms in Language</h3>
+
+					<ul>
+						<li><strong>Semiotics</strong> - The study of signs and symbols, including not just language but also visual cues and gestures</li>
+						<li class="fragment"><strong>Discourse Analysis</strong> - The study of how sentences relate to each other and provide a coherent meaning. Critical for summarization and dialogue</li>
+						<li class="fragment"><strong>Co-reference Resolution</strong> - Identifying which words or phrases in a document belong to the same entity</li>
+						<li class="fragment"><strong>Token</strong> - An individual word, punctuation mark, or fragment of a word</li>
+						<li class="fragment"><strong>Part of speech</strong> - The grammatical label for a given word or token. Ex: noun, verb, adjective</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+					
+					<ol>
+						<li>Words are Hard</li>
+						<li class="active">What is Natural Language Processing?</li>
+						<li>An Introduction to SpaCy</li>
+						<li>NLTK: A Historical Perspective</li>
+						<li>Linguistics and NLP</li>
+						<li>From Tags to Vectors</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/robot.jpg" data-background-opacity="0.2">
+					<h3>Natural Language Processing</h3>
+
+					<p>Natural language processing is a field within artificial intelligence, with the goal of recognizing and analyzing text and speech.</p>
+
+					<p>We use a variety of techniques to do this, including computational linguistics, rule-based modeling of human languages, statistical modeling of languages, machine learning, and deep learning.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/caution.jpg" data-background-opacity="0.2">
+					<h3>A Quick Warning</h3>
+
+					<p>Modern natural language processing builds heavily on top of neural networks and deep learning techniques.</p>
+
+					<p>We will <strong>not</strong> get into neural network architectures or detailed descriptions of the topic in this talk. This is a beginner-level NLP talk!</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/notebook.jpg" data-background-opacity="0.2">
+					<h3>Use Cases for NLP</h3>
+
+					<p>Natural language processing enables us to perform a variety of tasks, including but not limited to:</p>
+
+					<ul>
+						<li><strong>Sentiment analysis</strong> - Understanding the emotions behind a block of text</li>
+						<li class="fragment"><strong>Topic modeling</strong> - Find a common theme in a set of documents</li>
+						<li class="fragment"><strong>Machine translation</strong> - Automatically translating a document from one language into another</li>
+						<li class="fragment"><strong>Extractive summarization</strong> - Pull the most important words or sentences from a document</li>
+						<li class="fragment"><strong>Abstractive summarization</strong> - Generate new text describing the primary theme of a document</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/background/challenge.jpg" data-background-opacity="0.2">
+					<h3>The Challenges of NLP</h3>
+
+					<p>Natural language processing brings with it a series of challenges, including but not limited to:</p>
+
+					<ul>
+						<li>The importance of context ("that thing I told you about last week")</li>
+						<li class="fragment">Ambiguity in term ("buffalo" and my favorite sentence in the English language)</li>
+						<li class="fragment">Ambiguity in meaning ("just around the corner")</li>
+						<li class="fragment">Sarcasm or irony ("ooh, a sarcasm detector, that's a really useful invention")</li>
+						<li class="fragment">Metaphors and idioms ("it's raining cats and dogs")</li>
+						<li class="fragment">Slang and informal language</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+					
+					<ol>
+						<li>Words are Hard</li>
+						<li>What is Natural Language Processing?</li>
+						<li class="active">An Introduction to SpaCy</li>
+						<li>NLTK: A Historical Perspective</li>
+						<li>Linguistics and NLP</li>
+						<li>From Tags to Vectors</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/space.jpg" data-background-opacity="0.2">
+					<h3>What Is SpaCy?</h3>
+
+					<p>SpaCy is a Python library for natural language processing.</p>
+
+					<p>It is designed to be fast, efficient, and easy to use.</p>
+
+					<p>It is <strong>not</strong> an API, software-as-a-service product, or chat bot engine.</p>
+					
+				</section>
+
+				<section data-background-image="presentation/assets/background/skeleton-thinking.jpg" data-background-opacity="0.2">
+					<h3>Why Use SpaCy?</h3>
+
+					<p>Key benefits of spaCy include:</p>
+
+					<ul>
+						<li>Free and open-source</li>
+						<li>Supports 75+ languages</li>
+						<li>Enables part of speech tagging and visualization of results</li>
+						<li>Supports named entity recognition</li>
+						<li>"Pythonic" interface</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/background/demo.jpg" data-background-opacity="0.2">
+					<h3>Demo Time</h3>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+					
+					<ol>
+						<li>Words are Hard</li>
+						<li>What is Natural Language Processing?</li>
+						<li>An Introduction to SpaCy</li>
+						<li class="active">NLTK: A Historical Perspective</li>
+						<li>Linguistics and NLP</li>
+						<li>From Tags to Vectors</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/library.jpg" data-background-opacity="0.2">
+					<h3>NLTK's Historical Role</h3>
+
+					<p>The Natural Language Toolkit (NLTK) is another open-source Python library for natural language processing.</p>
+
+					<p>NLTK is more research-friendly, emphasizing the ability to play with natural language over production speed.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/muay-thai.jpg" data-background-opacity="0.2">
+					<h3>SpaCy vs NLTK</h3>
+
+					<p>Why do we focus on spaCy in this talk?</p>
+
+					<table>
+						<tr>
+							<th>NLTK</th>
+							<th>SpaCy</th>
+						</tr>
+						<tr>
+							<td>Research-oriented</td>
+							<td>Production-oriented</td>
+						</tr>
+						<tr>
+							<td>Slower</td>
+							<td>Faster</td>
+						</tr>
+						<tr>
+							<td>More complex API</td>
+							<td>Simpler API</td>
+						</tr>
+						<tr>
+							<td>More features</td>
+							<td>Fewer features</td>
+						</tr>
+					</table>
+				</section>
+
+				<section data-background-image="presentation/assets/background/microscope2.jpg" data-background-opacity="0.2">
+					<h3>When NLTK Makes Sense</h3>
+
+					<p>NLTK is still a great choice for:</p>
+
+					<ul>
+						<li>Exploratory data analysis of natural language documents</li>
+						<li>Linguistic research</li>
+						<li>Educational purposes (e.g., computational linguistics courses)</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+					
+					<ol>
+						<li>Words are Hard</li>
+						<li>What is Natural Language Processing?</li>
+						<li>An Introduction to SpaCy</li>
+						<li>NLTK: A Historical Perspective</li>
+						<li class="active">Linguistics and NLP</li>
+						<li>From Tags to Vectors</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Do We Need a Linguistics Background?</h3>
+
+					<img src="presentation/assets/image/YesButActuallyNo.jpg" height="400" />
+				</section>
+
+				<section data-background-image="presentation/assets/background/greek-architecture.jpg" data-background-opacity="0.2">
+					<h3>Do We Need a Linguistics Background?</h3>
+
+					<p>Some foundation in how natural languages work can be helpful when dealing with natural language processing. Not only does this help you understand
+						the reason why you perform specific tasks, but can also point you toward structured ways of thinking about the problem.
+					</p>
+
+					<p>This does <strong>not</strong> mean you need a PhD in linguistics, or even formal training in the field!</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/library2.jpg" data-background-opacity="0.2">
+					<h3>Ways to Get Started with Linguistics</h3>
+
+					<ul>
+						<li>Khan Academy has <a href="https://www.khanacademy.org/humanities/grammar">an introduction to grammar</a> in standard American English</li>
+						<li class="fragment">edX has <a href="https://www.edx.org/learn/linguistics">a variety of free courses</a> for learning linguistics</li>
+						<li class="fragment">Textbooks like <a href="https://ohiostatepress.org/books/titles/9780814258354.html">Language Files: Materials for an Introduction to Language and Linguistics</a> (13th Edition)</li>
+						<li class="fragment">General audience books like How Language Works by David Crystal</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/background/goals.jpg" data-background-opacity="0.2">
+					<h3>Tips for Learning Linguistics</h3>
+
+					<ul>
+						<li>Linguistics is a very broad field. Focus on the sub-fields most relevant to NLP: syntax, semantics, morphology</li>
+						<li>Relate it to specific tasks to lock in that knowledge</li>
+						<li>Eat the elephant--start with the basics and gradually expand knowledge as you need it (or find it interesting!)</li>
+						<li>Experiment with spaCy and NLTK along the way</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+					
+					<ol>
+						<li>Words are Hard</li>
+						<li>What is Natural Language Processing?</li>
+						<li>An Introduction to SpaCy</li>
+						<li>NLTK: A Historical Perspective</li>
+						<li>Linguistics and NLP</li>
+						<li class="active">From Tags to Vectors</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/old-equipment.jpg" data-background-opacity="0.2">
+					<h3>A Reminder of Traditional NLP</h3>
+
+					<p>Most of the work we've done so far involves parts of speech and a syntactic understanding of language. This is the domain of traditional natural language processing and is still very useful today.</p>
+
+					<p>But it does lead to certain problems.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/surfer-crash.jpg" data-background-opacity="0.2">
+					<h3>The Semantic Problem in NLP</h3>
+
+					<p>Traditional natural language processing relies on a syntactic understanding of language. This is great for many tasks, but it doesn't help us with the semantic meaning of a word.</p>
+
+					<p>For example, the word "bank" can refer to a financial institution, the side of a river, or a place to store something.</p>
+
+					<p>We also lack the ability to perform semantic comparisons: wolf is to dog as tiger is to ___?</p>
+
+					<p>We need a way to represent the meaning of a word in a way that is more flexible and can be used for a variety of tasks.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/paper-stack.jpg" data-background-opacity="0.2">
+					<h3>Word2Vec</h3>
+
+					<p>In 2013, Tomas Mikolov and his team at Google released a paper entitled <strong>Efficient Estimation of Word Representations in Vector Space</strong>. In this paper, they introduce Word2Vec.</p>
+
+					<p>Word2Vec is a technique for representing words as vectors in a high-dimensional space. This allows us to perform semantic comparisons and find similar words.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/math.jpg" data-background-opacity="0.2">
+					<h3>Word2Vec</h3>
+
+					<p>The key intuition is that we can represent words as dense vectors in a continuous vector space.</p>
+
+					<p>Vectors retain some amount of their semantic meaning in that vector space.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Word2Vec and Vector Space</h3>
+
+					<p>The key intuition is that we can represent words as dense vectors in a continuous vector space.
+						"Vector space" is a fancy term for representing something as a fixed-size list of numbers.</p>
+
+					<pre><code data-trim><script type="text/template">
+						dog = [0.2, 0.4, 0.6]
+						cat = [0.1, 0.3, 0.5]
+						fox = [0.3, 0.5, 0.7]
+						animal = [0.2, 0.4, 0.6]
+
+						apple = [-0.8, -0.6, -0.4]
+						fruit = [-0.7, -0.5, -0.3]
+					</script></code></pre>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>How We Vectorize</h3>
+
+					<p>Word2Vec introduced two techniques: Skip-Gram and Continuous Bag of Words.</p>
+
+					<p>Skip-Gram: Given a word, predict the surrounding words in a sentence.</p>
+
+					<p><code>___ score ___ ___ ___ ___ -></code> "Four score and seven years ago"</p>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>How We Vectorize</h3>
+
+					<p>Word2Vec introduced two techniques: Skip-Gram and Continuous Bag of Words.</p>
+
+					<p>Skip-Gram: Given a word, predict the surrounding words in a sentence.</p>
+
+					<p>Continuous Bag of Words: Given a set of surrounding words, predict the word in the middle.</p>
+
+					<p><code>Four ___ and seven years ago -></code> "score"</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/calculator.jpg" data-background-opacity="0.2">
+					<h3>Why Vectors Matter</h3>
+
+					<p>We can perform mathematical operations on vectors, such as adding, subtracting, multiplying and dividing them.</p>
+
+					<p>The classic Word2Vec formulation is: "King - Man + Woman = ??"</p>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Why Vectors Matter</h3>
+
+					<img src="presentation/assets/image/Word_vector_illustration.jpg" height="500" />
+				</section>
+
+				<section data-background-image="presentation/assets/background/engineering.jpg" data-background-opacity="0.2">
+					<h3>From Vectors to Embeddings</h3>
+
+					<p>Word2Vec shocked the natural language processing community when the paper first came out. Since then, the biggest development has been in vector space.</p>
+
+					<p>Embedding techniques like GloVe, FastText, and BERT are able to capture even more semantic information.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/open-books.jpg" data-background-opacity="0.2">
+					<h3>From Vectors to Embeddings</h3>
+
+					<p>Vectorization is the process of translating data into numerical vectors.</p>
+
+					<p>Embeddings are <strong>learned</strong> vector representations of words, phrases, or even entire documents.</p>
+
+					<p>We generate embeddings using neural network models trained on large datasets of text. The model learns to position similar ideas close together in vector space.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>From Vectors to Embeddings</h3>
+
+					<p>Embeddings also allow us to use techniques like cosine similarity to determine how similar two vectors are. This ties back to a <strong>semantic</strong> similarity between concepts.</p>
+
+					<img src="presentation/assets/image/CosineSimilarity.png" height="400" />
+				</section>
+
+				<section data-background-image="presentation/assets/background/wrappingup.jpg" data-background-opacity="0.2">
+					<h3>Wrapping Up</h3>
+
+					<p>Over the course of this talk, we gained a high-level understanding of what natural language processing is.
+						We looked at one very popular NLP library in spaCy and saw how NLP has transitioned from a syntax-heavy approach to a semantics-heavy
+						approach thanks to vectorization and embeddings.</p>
+				</section>
+				
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Wrapping Up</h3>
+					
+					<p>
+						To learn more, go here:
+						<br />
+						<a href="https://csmore.info/on/basicsofnlp">https://csmore.info/on/basicsofnlp</a>
+					</p>
+					<p>
+						And for help, contact me:
+						<br />
+						<a href="mailto:feasel@catallaxyservices.com">feasel@catallaxyservices.com</a> | <a href="https://www.twitter.com/feaselkl">@feaselkl</a>
+					</p>
+					<br />
+					<p>
+						Catallaxy Services consulting:
+						<br />
+						<a href="https://csmore.info/contact">https://CSmore.info/contact</a>
+					</p>
+				</section>
+			</div>
+		</div>
+
+		<script src="../reveal.js/dist/reveal.js"></script>
+		<script src="../reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="../reveal.js/plugin/notes/notes.js"></script>
+		<script src="../reveal.js/plugin/search/search.js"></script>
+		<script src="../reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="../reveal.js/plugin/math/math.js"></script>
+		<script src="../reveal.js/plugin/menu/menu.js"></script>
+		<script src="../reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="../reveal.js/plugin/chart/Chart.min.js"></script>
+		<script src="../reveal.js/plugin/chart/plugin.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				width: '70%',
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+				transition: 'fade',
+				
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight, RevealMath, RevealMenu, RevealChart ]
+			});
+		</script>
+	</body>
+</html>
